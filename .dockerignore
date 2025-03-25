@@ -1,0 +1,30 @@
+# Dependency directories
+node_modules/
+src-extensions/*/node_modules/
+
+# Environment files
+.env
+*.env.local
+
+# Development and version control
+.git/
+.gitignore
+.vscode/
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build and temporary directories
+dist/
+build/
+tmp/
+temp/
+
+# Specific project directories to ignore
+VSCodeCounter/
+.VSCodeCounter/
+
+#Directus build extension 
+extensions/directus-extension-my-bundle/*

@@ -4,16 +4,26 @@ FROM node:22.14.0
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json first for better caching
+# Copy the root package.json and package-lock.json first
 COPY package*.json ./
 
 # Update npm to the latest version
 RUN npm install -g npm@latest
 
-# Install dependencies
+# Install root-level dependencies
 RUN npm install --only=production
 
-# Copy the rest of the application files
+# Copy the package.json for the my-bundle extension
+COPY src-extensions/my-bundle/package*.json ./src-extensions/my-bundle/
+
+# Install my-bundle extension dependencies
+WORKDIR /app/src-extensions/my-bundle
+RUN npm install --only=production
+
+# Return to main app directory
+WORKDIR /app
+
+# Copy the rest of the application
 COPY . .
 
 # Expose the port the app runs on
