@@ -5,12 +5,13 @@
     "name": "Amit Kulkarni",
     "url": "https://yohita.com"
   },
-	"version": "11.3.5",
+  "version": "11.3.5",
   "scripts": {
-  "dev": "nodemon --watch src-extensions/my-bundle/src --config nodemon.json --exec \"bash script-quickstart.sh\""
+    "dev": "nodemon  --watch ./src-extensions/my-bundle/src --config nodemon.json --ext js,ts,json,html,css,vue --exec \"powershell -ExecutionPolicy Bypass -File script-quickstart.ps1\""
   },
   "dependencies": {
     "directus": "11.3.5",
+    "saas": "^1.0.0",
     "sqlite3": "^5.1.7"
   }
 }

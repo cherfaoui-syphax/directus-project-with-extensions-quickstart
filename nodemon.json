@@ -1,0 +1,5 @@
+{
+    "watch": ["src-extensions/my-bundle/src"],
+    "ext": "js,ts,json,html,css,vue",
+    "ignore": ["node_modules"]
+  }

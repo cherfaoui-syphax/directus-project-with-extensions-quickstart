@@ -19,6 +19,16 @@
 				"type": "hook",
 				"name": "my-hooks",
 				"source": "src/my-hooks/index.js"
+			},
+			{
+				"type": "module",
+				"name": "Data",
+				"source": "src/Data/index.js"
+			},
+			{
+				"type": "layout",
+				"name": "grid-layout",
+				"source": "src/grid-layout/index.js"
 			}
 		]
 	},
@@ -36,6 +46,11 @@
 		"add": "directus-extension add"
 	},
 	"devDependencies": {
-		"@directus/extensions-sdk": "12.1.4"
+		"@directus/extensions-sdk": "12.1.4",
+		"vue": "^3.5.13"
+	},
+	"dependencies": {
+		"ag-grid-vue3": "^33.1.1",
+		"saas": "^1.0.0"
 	}
 }
