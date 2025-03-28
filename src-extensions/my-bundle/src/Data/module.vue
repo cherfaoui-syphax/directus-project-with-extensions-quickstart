@@ -81,7 +81,7 @@ export default {
     async function renderPage(page) {
       try {
         if (!page || page === "home") {
-          pageTitle.value = "Home";
+          pageTitle.value = "Home de los hombres";
           pageBanner.value = addTokenToURL("/assets/home-banner.jpg?width=2000&height=563&fit=cover");
           currentCollection.value = null; // No collection for home page
           return;
