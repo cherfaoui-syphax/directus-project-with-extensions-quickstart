@@ -96,7 +96,7 @@ For detailed information on how to use Directus, refer to the official [Directus
 
 This project includes the tools and structure for developing extensions for Directus. You can find extension development resources and examples in the src-extensions directory. To get started with extension development, follow these steps:
 
-**Check Below Video from YouTube :**
+**Check Below Video from YouTube :*
 
 [![Youtube Video](https://img.youtube.com/vi/dY96SwsR_3Y/0.jpg)](https://www.youtube.com/watch?v=dY96SwsR_3Y)
 
