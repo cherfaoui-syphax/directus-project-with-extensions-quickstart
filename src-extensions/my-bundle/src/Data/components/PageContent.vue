@@ -1,22 +1,27 @@
 <template>
-  <div v-if="!collection" class="lp-body">
-    <p>Bienvenue sur la page d'accueil.</p>
-  </div>
-  <div v-else-if="loading" class="lp-body">
-    <p>Loading content...</p>
-  </div>
-  <div v-else-if="noData" class="lp-body">
-    <p>Aucune donnée disponible.</p>
-  </div>
-  <div v-else class="lp-body ag-theme-alpine">
-    <ag-grid-vue
-      style="width: 100%; height: 500px"
-      :columnDefs="columnDefs"
-      :rowData="rowData"
-      :defaultColDef="defaultColDef"
-      :pagination="true"
-      :paginationPageSize="10"
-    />
+  <div class="lp-container">
+    <div v-if="!collection" class="lp-body empty-state">
+      <p>Bienvenue sur la page d'accueil.</p>
+    </div>
+    <div v-else-if="loading" class="lp-body loading-state">
+      <p>Chargement des données...</p>
+    </div>
+    <div v-else-if="noData" class="lp-body no-data-state">
+      <p>Aucune donnée disponible.</p>
+    </div>
+    <div v-else class="lp-body ag-theme-alpine-dark">
+      <ag-grid-vue
+        class="custom-grid"
+        style="width: 100%; height: 600px"
+        :columnDefs="columnDefs"
+        :rowData="rowData"
+        :defaultColDef="defaultColDef"
+        :pagination="true"
+        :paginationPageSize="20"
+        :rowSelection="'multiple'"
+        :animateRows="true"
+      />
+    </div>
   </div>
 </template>
 
@@ -28,7 +33,6 @@ import { ModuleRegistry, ClientSideRowModelModule } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 
-// Register the required module
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 export default {
@@ -52,21 +56,18 @@ export default {
       filter: true,
       resizable: true,
       flex: 1,
-      minWidth: 100,
+      minWidth: 120,
+      cellStyle: { textAlign: "center", fontSize: "14px", borderRight: "1px solid #444" },
     });
 
-    const noData = computed(() => {
-      return props.collection && rowData.value.length === 0 && !loading.value;
-    });
+    const noData = computed(() => props.collection && rowData.value.length === 0 && !loading.value);
 
-    // Watch for collection changes
     watch(
       () => props.collection,
       (newCollection) => {
         if (newCollection) {
           fetchCollectionData(newCollection);
         } else {
-          // Reset data when on home page
           rowData.value = [];
           columnDefs.value = [];
         }
@@ -76,37 +77,29 @@ export default {
 
     async function fetchCollectionData(collection) {
       if (!collection) return;
-
       loading.value = true;
       rowData.value = [];
       columnDefs.value = [];
 
       try {
         const { data } = await api.get(`/items/${collection}`);
-
         if (data.data && data.data.length) {
-          // Create column definitions from the first row
           const firstRow = data.data[0];
           columnDefs.value = Object.keys(firstRow).map((key) => ({
             field: key,
-            headerName:
-              key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " "),
-            // Handle special cases for different data types
+            headerName: key.replace(/_/g, " ").toUpperCase(),
+            wrapText: true,
+            autoHeight: true,
             cellRenderer: (params) => {
-              if (params.value === null || params.value === undefined) {
-                return "-";
-              } else if (typeof params.value === "object") {
-                return JSON.stringify(params.value);
-              }
+              if (params.value === null || params.value === undefined) return "-";
+              if (typeof params.value === "object") return JSON.stringify(params.value);
               return params.value;
             },
           }));
-
-          // Set row data
           rowData.value = data.data;
         }
       } catch (error) {
-        console.error("Error fetching collection data:", error);
+        console.error("Erreur lors de la récupération des données :", error);
       } finally {
         loading.value = false;
       }
@@ -124,23 +117,49 @@ export default {
 </script>
 
 <style scoped>
-.lp-body {
-  padding: var(--content-padding);
-  background: var(--background-light);
+.lp-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: var(--background-light);
   border-radius: var(--border-radius);
 }
 
-/* Ensure AG Grid styles are applied correctly */
-:deep(.ag-header-cell-label) {
+.lp-body {
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state, .loading-state, .no-data-state {
+  text-align: center;
+  font-size: 18px;
+  color: var(--text-muted);
   font-weight: bold;
 }
 
-:deep(.ag-row) {
-  border-bottom: 1px solid var(--border-normal);
+.custom-grid {
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-:deep(.ag-theme-alpine) {
-  --ag-background-color: transparent;
-  --ag-odd-row-background-color: rgba(0, 0, 0, 0.05);
+:deep(.ag-header-cell-label) {
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  white-space: normal !important;
+  text-align: center;
+}
+
+:deep(.ag-theme-alpine-dark) {
+  --ag-header-background-color: #1e1e1e;
+  --ag-background-color: #2b2b2b;
+  --ag-border-color: #444;
+  --ag-odd-row-background-color: rgba(255, 255, 255, 0.05);
+  --ag-font-size: 14px;
 }
 </style>
