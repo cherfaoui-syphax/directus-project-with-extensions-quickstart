@@ -42,4 +42,3 @@ vendor
 # Allow dist folder in extensions and its subdirectories
 !/extensions/**/dist/
 
-/extensions/.registry
